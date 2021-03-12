@@ -156,7 +156,15 @@ class _DetailsState extends State<Details> {
       firestoreInstance
           .collection("users")
           .doc(firebaseUser.uid)
-          .set({"name": a, "phone": b, "Age": c}, SetOptions(merge: true))
+          .set({
+            "name": a,
+            "phone": b,
+            "Age": c,
+            "status": "Waiting for confirmation",
+            "driver name": "Not Assigned",
+            "driver phone": "Not Assigned",
+            "hospital": "Not Assigned"
+          }, SetOptions(merge: true))
           .then((_) {})
           .whenComplete(() => Navigator.push(
                 context,

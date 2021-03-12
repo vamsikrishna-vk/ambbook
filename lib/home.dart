@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission/permission.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:ambbook/profile.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location_permissions/location_permissions.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 //import 'package:location/location.dart';
 
 class Home1 extends StatelessWidget {
@@ -119,56 +121,159 @@ class _HomeState extends State<Home> {
             ],
           ))),
           body: SafeArea(
-              child: Container(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      if (!emergency)
-                        (Container(
-                          decoration: new BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
-                          height: 400,
-                          child: GoogleMap(
-                            onMapCreated: _onMapCreated,
-                            initialCameraPosition:
-                                CameraPosition(target: _center, zoom: 15),
-                            mapType: MapType.normal,
-                            myLocationEnabled: true,
-                          ),
-                        )),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      if (!emergency)
-                        (InkWell(
-                            onTap: () => {_showDialog(context)},
-                            child: Container(
-                                height: 60,
-                                decoration: new BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
+              child: StreamBuilder(
+                  stream: firestoreInstance
+                      .collection("users")
+                      .doc(firebaseUser.uid)
+                      .snapshots(),
+                  builder: (context1, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Center(
+                            child: SpinKitFadingCircle(
+                          color: Color(0xFFef7f1a),
+                          duration: const Duration(milliseconds: 2000),
+                        ));
+
+                      default:
+                        emergency = snapshot.data["emergency"];
+                        return Container(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                if (!emergency)
+                                  (Container(
+                                    decoration: new BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(30)),
+                                    ),
+                                    height: 400,
+                                    child: GoogleMap(
+                                      onMapCreated: _onMapCreated,
+                                      initialCameraPosition: CameraPosition(
+                                          target: _center, zoom: 15),
+                                      mapType: MapType.normal,
+                                      myLocationEnabled: true,
+                                    ),
+                                  )),
+                                SizedBox(
+                                  height: 30,
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    "Book Ambulance".toUpperCase(),
-                                    textScaleFactor: 1.5,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )))),
-                      if (emergency)
-                        (Center(
-                            child: Container(
-                                child: Column(
-                          children: [Text("Your Ambulance is on its way",
-                          textScaleFactor: 1.5,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),)],
-                        ))))
-                    ],
-                  )))),
+                                if (!emergency)
+                                  (InkWell(
+                                      onTap: () => {_showDialog(context)},
+                                      child: Container(
+                                          height: 60,
+                                          decoration: new BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Book Ambulance".toUpperCase(),
+                                              textScaleFactor: 1.5,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          )))),
+                                if (emergency)
+                                  (Center(
+                                      child: Container(
+                                          child: Column(
+                                    children: [
+                                      Text(
+                                        "Your Ambulance is on its way!",
+                                        textScaleFactor: 1.2,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        "Stay on this page for more updates",
+                                        textScaleFactor: 1,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                          decoration: new BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.2),
+
+                                                  blurRadius: 6,
+                                                  offset: Offset(0,
+                                                      2), // changes position of shadow
+                                                ),
+                                              ],
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: Container(
+                                              padding: EdgeInsets.all(15),
+                                              child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .stretch,
+                                                  children: [
+                                                    Table(children: [
+                                                      TableRow(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 30,
+                                                            child: Text(
+                                                              "Status",
+                                                              textScaleFactor:
+                                                                  1,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                              snapshot.data[
+                                                                  "status"],
+                                                              textScaleFactor:
+                                                                  1),
+                                                        ],
+                                                      ),
+                                                      TableRow(children: [
+                                                        SizedBox(
+                                                            height: 30,
+                                                            child: Text(
+                                                                "Hospital")),
+                                                        Text(snapshot
+                                                            .data["hospital"]),
+                                                      ]),
+                                                      TableRow(children: [
+                                                        SizedBox(
+                                                            height: 30,
+                                                            child: Text(
+                                                                "Driver name")),
+                                                        Text(snapshot.data[
+                                                            "driver name"]),
+                                                      ]),
+                                                      TableRow(children: [
+                                                        SizedBox(
+                                                            height: 30,
+                                                            child: Text(
+                                                                "Driver number")),
+                                                        Text(snapshot.data[
+                                                            "driver phone"]),
+                                                      ]),
+                                                    ])
+                                                  ])))
+                                    ],
+                                  ))))
+                              ],
+                            ));
+                    }
+                  }))),
     );
   }
 
@@ -217,7 +322,11 @@ class _HomeState extends State<Home> {
     await firestoreInstance.collection("users").doc(firebaseUser.uid).set({
       "emergency": true,
       "longitude": loc.longitude,
-      "latitude": loc.latitude
+      "latitude": loc.latitude,
+      "status": "waiting for confirmation",
+      "driver name": "Not Assigned",
+      "driver phone": "Not Assigned",
+      "hospital": "Not Assigned"
     }, SetOptions(merge: true));
   }
 }

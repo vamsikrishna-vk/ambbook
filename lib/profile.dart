@@ -17,11 +17,6 @@ class profile extends StatelessWidget {
       home: Scaffold(
           appBar: AppBar(
             toolbarHeight: 70,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(20),
-              ),
-            ),
             backgroundColor: Colors.black,
             leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios),
