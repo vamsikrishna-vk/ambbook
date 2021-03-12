@@ -97,10 +97,12 @@ class _LoginState extends State<Login> {
                                   icon: _toggleVisibility
                                       ? Icon(
                                           Icons.visibility_off,
-                                          color: Color(0xFFef7f1a),
+                                          color: Colors.black,
                                         )
-                                      : Icon(Icons.visibility,
-                                          color: Color(0xFFef7f1a)),
+                                      : Icon(
+                                          Icons.visibility,
+                                          color: Colors.black,
+                                        ),
                                 ),
                                 border: const OutlineInputBorder(
                                   borderSide: BorderSide.none,
@@ -129,7 +131,7 @@ class _LoginState extends State<Login> {
                             height: 33,
                             width: 99,
                             decoration: BoxDecoration(
-                              color: Color(0xFFef7f1a),
+                              color: Colors.black,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                             ),

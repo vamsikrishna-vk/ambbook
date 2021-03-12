@@ -2,7 +2,7 @@ import 'package:ambbook/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'authentication_service.dart';
-
+import 'package:ambbook/Details.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Signup extends StatefulWidget {
@@ -21,6 +21,9 @@ class _SignupState extends State<Signup> {
   final TextEditingController emailController1 = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordController1 = TextEditingController();
+  final TextEditingController Name = TextEditingController();
+  final TextEditingController Phone = TextEditingController();
+  final TextEditingController Age = TextEditingController();
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -37,7 +40,6 @@ class _SignupState extends State<Signup> {
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(18)),
                   ),
-                  height: 500,
                   alignment: Alignment.center,
                   child: Container(
                     child: Column(
@@ -195,7 +197,8 @@ class _SignupState extends State<Signup> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Home1()),
+                                                builder: (context) =>
+                                                    Details()),
                                           ),
                                         })
                               }

@@ -42,14 +42,15 @@ dev_dependencies:
 
 
   shared_preferences:
-
-
+  google_maps_flutter: ^0.4.0
+  geolocator:
   http: ^0.12.2
   curl: ^1.0.0
-
+  permission:
+  location: ^3.0.2
   google_fonts: ^1.1.1
   google_sign_in: ^4.4.4
-
+  location_permissions: ^3.0.0+1
   cached_network_image: ^2.4.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
