@@ -32,13 +32,23 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  _HomeState() {
+    locationtrack();
+  }
   @override
+  final Geolocator geolocator = Geolocator();
   final firestoreInstance = FirebaseFirestore.instance;
   var firebaseUser = FirebaseAuth.instance.currentUser;
   GoogleMapController _controller;
 
   static const LatLng _center = const LatLng(13.116572, 77.635162);
   Location _location = Location();
+  Position _currentPosition;
+  Future locationtrack() async {
+    _currentPosition = await Geolocator.getCurrentPosition();
+    print(_currentPosition);
+  }
+
   void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _cntlr;
     _location.onLocationChanged.listen((l) {
@@ -115,6 +125,9 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: [
                   Container(
+                    decoration: new BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
                     height: 400,
                     child: GoogleMap(
                       onMapCreated: _onMapCreated,
@@ -126,21 +139,62 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     height: 30,
                   ),
-                  Container(
-                      height: 60,
-                      decoration: new BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Book Ambulance".toUpperCase(),
-                          textScaleFactor: 1.5,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ))
+                  InkWell(
+                      onTap: () => {_showDialog(context)},
+                      child: Container(
+                          height: 60,
+                          decoration: new BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Book Ambulance".toUpperCase(),
+                              textScaleFactor: 1.5,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )))
                 ],
               ))),
     ));
+  }
+
+  void _showDialog(BuildContext context) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Are you sure you want to book ambulance"),
+          content: new Text(""),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              //color: Color(0xFF556F7A),
+              child: new Text("yes"),
+              onPressed: () {
+                senddata(_currentPosition).then(() => Navigator.pop(context));
+              },
+            ),
+            new FlatButton(
+              //color: Color(0xFF556F7A),
+              child: new Text("cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  senddata(Position loc) async {
+    await firestoreInstance.collection("users").doc(firebaseUser.uid).set({
+      "emergency": true,
+      "longitude": loc.longitude,
+      "latitude": loc.latitude
+    }, SetOptions(merge: true));
   }
 }
