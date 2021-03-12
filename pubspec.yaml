@@ -47,7 +47,7 @@ dev_dependencies:
   http: ^0.12.2
   curl: ^1.0.0
   permission:
-  location: ^3.0.2
+
   google_fonts: ^1.1.1
   google_sign_in: ^4.4.4
   location_permissions: ^3.0.0+1
